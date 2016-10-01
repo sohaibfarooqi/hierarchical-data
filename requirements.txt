@@ -1,0 +1,8 @@
+alembic==0.8.7
+Flask==0.11.1
+Flask-SQLAlchemy==2.1
+Flask-Migrate==2.0.0
+Mako==1.0.4
+psycopg2==2.6.2
+SQLAlchemy==1.1.0b3
+
