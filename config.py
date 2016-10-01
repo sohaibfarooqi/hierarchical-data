@@ -6,4 +6,4 @@ class ApplicationConfig:
     SQLALCHEMY_ECHO=True #print SQL Query to Console
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = os.environ.get('FLASK_DEBUG', False)
-    SECRET_KEY = os.environ['SECRET_KEY']
+    SECRET_KEY = 'abcs'
