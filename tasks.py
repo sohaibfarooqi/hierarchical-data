@@ -13,26 +13,27 @@ from logging.config import fileConfig
 def build(ctx):
 	fileConfig('logging_config.ini')
 	logger = logging.getLogger('tasks')
-	logger.setLevel(logging.INFO)
 	logger.info('Job Started')
 	create_app(ApplicationConfig).app_context().push()
 	last_id = db.session.query(FirstModel).order_by(FirstModel.id.desc()).first()
-	RESULT_LIMIT = int(os.getenv('NUM_RECORDS', 10))
-	logger.info('Number of Records to be Inserted: %i', RESULT_LIMIT)
+	NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
+	CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
+	logger.info('Number of Records to be Inserted: %i', NUM_RECORDS)
+	logger.info('Chunk Size: %i', CHUNK_SIZE)
 	if last_id is None:
 		start_range = 1
-		end_range = start_range + RESULT_LIMIT
+		end_range = start_range + NUM_RECORDS
 		parent_id = start_range
 	else:
 		logger.info('Last Inserted Id: %i', last_id.id)
 		start_range = last_id.id + 1
-		end_range = start_range + RESULT_LIMIT
+		end_range = start_range + NUM_RECORDS
 		parent_id = last_id.id
-
+		title = randomword(5)
+		
 	for i in range(start_range , end_range):
 		object_created_date = datetime.today() - timedelta(hours=i)
 		object_updated_date = datetime.today() - timedelta(minutes=i)
-		title = randomword(5)
 		desc = randomword(i+10);
 		if i%3 == 0:
 			parent_id+=1
@@ -45,8 +46,13 @@ def build(ctx):
 							title, 
 							desc
 						   )
+		
 		db.session.add(model)
-	db.session.commit()
+		
+		if(i % CHUNK_SIZE == 0):
+			logger.info('Commiting Session Rows')
+			db.session.commit()
+
 	logger.info('Job Finished')
 
 def randomword(length):
