@@ -6,19 +6,25 @@ from datetime import datetime,timedelta
 import random, string
 from app.app import create_app
 import os
+import logging
+from logging.config import fileConfig
 
 @task
 def build(ctx):
+	fileConfig('logging_config.ini')
+	logger = logging.getLogger('tasks')
+	logger.setLevel(logging.INFO)
+	logger.info('Job Started')
 	create_app(ApplicationConfig).app_context().push()
 	last_id = db.session.query(FirstModel).order_by(FirstModel.id.desc()).first()
-	
 	RESULT_LIMIT = int(os.getenv('NUM_RECORDS', 10))
-
+	logger.info('Number of Records to be Inserted: %i', RESULT_LIMIT)
 	if last_id is None:
 		start_range = 1
 		end_range = start_range + RESULT_LIMIT
 		parent_id = start_range
 	else:
+		logger.info('Last Inserted Id: %i', last_id.id)
 		start_range = last_id.id + 1
 		end_range = start_range + RESULT_LIMIT
 		parent_id = last_id.id
@@ -41,6 +47,7 @@ def build(ctx):
 						   )
 		db.session.add(model)
 	db.session.commit()
+	logger.info('Job Finished')
 
 def randomword(length):
    return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
