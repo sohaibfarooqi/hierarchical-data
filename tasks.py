@@ -10,7 +10,10 @@ from app.app import create_app
 @task
 def build(ctx):
 	create_app(ApplicationConfig).app_context().push()
-	for i in range(1,11):
+	last_id = db.session.query(FirstModel).order_by(FirstModel.id.desc()).first().id
+	start_range = last_id + 1
+	end_range = start_range + 10
+	for i in range(start_range , end_range):
 		object_created_date = datetime.today() - timedelta(hours=i)
 		object_updated_date = datetime.today() - timedelta(minutes=i)
 		title = randomword(5)
