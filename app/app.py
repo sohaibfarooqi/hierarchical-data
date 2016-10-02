@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-from .extentions import configure_extensions
+from .extentions import configure_extensions,db
 
 
 def create_app(config):
