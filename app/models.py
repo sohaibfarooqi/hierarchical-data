@@ -9,8 +9,7 @@ class TimestampMixin:
     updated_at = db.Column(db.DateTime, onupdate=func.now())
 
 class FirstModel(db.Model,Entity,TimestampMixin):
-    parent_id = db.Column(db.Integer, db.ForeignKey('first_model.id'), index=True)
-    parent_relationship = db.relationship('FirstModel', backref=db.backref('parent', remote_side='FirstModel.id'))
+    parent_id = db.Column(db.Integer, index=True)
     title = db.Column(db.String)
     description = db.Column(db.String)
 
