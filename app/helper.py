@@ -1,13 +1,14 @@
 from .extentions import db
 from .models import FirstModel
 from sqlalchemy.orm import aliased
+from flask import current_app as app
 
 class Helper:
-	def doRecursiveQuery():
-		#Root Element
-		root = FirstModel.query.filter(FirstModel.parent_id == -1).first()
+	# Related SO: http://stackoverflow.com/questions/24779093/query-self-referential-list-relationship-to-retrieve-several-level-child
+	# Docs: http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=cte#sqlalchemy.orm.query.Query.cte
+	def findAllTreeNodes(parent_id = -1):
+		root = FirstModel.query.filter(FirstModel.parent_id == parent_id).first()
 
-		#Get All Ids With Recursive Query
 		included = db.session.query(
 			FirstModel.id
 			).filter(
@@ -15,22 +16,24 @@ class Helper:
 			).cte(name="included", recursive=True)
 
 		included_alias = aliased(included, name="parent")
-		menu_alias = aliased(FirstModel, name="child")
+		model_alias = aliased(FirstModel, name="child")
 
 		included = included.union_all(
 				db.session.query(
-					menu_alias.id
+					model_alias.id
 					).filter(
-					menu_alias.parent_id == included_alias.c.id
+					model_alias.parent_id == included_alias.c.id
 					)
 					)
-
-		# Ids including root
-		menu_ids = map(
+		model_ids = map(
 			lambda _tuple: _tuple[0],
 			[(root.id,)] + db.session.query(included.c.id).distinct().all(),
 			)
 
-		menus = FirstModel.query.filter(FirstModel.id.in_(menu_ids)).all()
-		print (len(menus))
-		return menus
+		result = FirstModel.query.filter(FirstModel.id.in_(model_ids)).all()
+		return result
+
+	def findRootNodes():
+		
+		root = FirstModel.query.filter(FirstModel.parent_id == app.config["ROOT_ID"]).all()
+		return root
