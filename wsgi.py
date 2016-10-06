@@ -18,7 +18,7 @@ def get_subtree(parent_id):
 
 @app.route('/root/' , methods=['GET'])
 def get_root():
-	result_set = Helper.findRootNodes()
+	result_set = Helper.getRootNodes()
 	
 	if type(result_set) is list:
 		return jsonify({'response': firstmodel_schemas.dump(result_set).data})
@@ -26,8 +26,8 @@ def get_root():
 		return jsonify({'response': firstmodel_schema.dump(result_set).data})
 
 @app.route('/leaf/', defaults = {'parent_id': None} , methods=['GET'])
-@app.route('/leaf/' , methods=['GET'])
-def get_leaf(parent_id):
+@app.route('/leaf/<int:parent_id>' , methods=['GET'])
+def get_leaf(parent_id = None):
 	result_set = Helper.getLeafNodes(parent_id)
 	return jsonify({'response': firstmodel_schemas.dump(result_set).data})
 	
