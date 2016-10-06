@@ -36,15 +36,26 @@ class Helper:
 		return result_set
 
     # Get all root nodes based on parent_id
-	def findRootNodes():
+	def getRootNodes():
+		
 		root = FirstModel.query.filter(FirstModel.parent_id == app.config["ROOT_ID"]).all()
 		return root
 
 	# Get all leaf nodes based on a parent_id. if no parent is provided it will return all leaf nodes.
 	def getLeafNodes(parent_id = None):
+		
 		if parent_id is None:
 			first_model_alias = aliased(FirstModel)
-			return FirstModel.query.join(first_model_alias, FirstModel.id == first_model_alias.parent_id).filter(first_model_alias.parent_id == None).all()
+			return FirstModel.query.outerjoin(first_model_alias, FirstModel.id == first_model_alias.parent_id).filter(first_model_alias.parent_id == None).all()
+		
 		else:
-			return []
+			subtree = Helper.getSubTree(parent_id)
+			for node in subtree:
+				if node.id in [data.parent_id for data in subtree]:
+					subtree.remove(node)
+			return subtree
+
+
+
+
 
