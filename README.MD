@@ -35,6 +35,7 @@ Following methods are used for benchmarking response and query time.
 ## Routes
 Application provides following end-points:
  - ### Adjcency List End-Points
+    
     | function                     |Route                              |Description                                                                                 |
     |---------------------------|----------------------------------|------------------------------------------------------------------------------------------------|
     | get_subtree               |`/subtree/<id>`          	       |Get sub tree based on parent id provided in path params. It returns whole tree if no parent id is provided |
