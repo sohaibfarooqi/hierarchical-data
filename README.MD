@@ -37,11 +37,9 @@ Application provides following end-points:
  - ### Adjcency List End-Points
     | function                     |Route                              |Description                                                                                 |
     |---------------------------|----------------------------------|------------------------------------------------------------------------------------------------|
-    | get_subtree               |`/subtree/<id>`          	       |Get sub tree based on parent id provided in path params. It returns whole tree if no parent id  |
-    |                           |                                  |is provided                                                                                     |
+    | get_subtree               |`/subtree/<id>`          	       |Get sub tree based on parent id provided in path params. It returns whole tree if no parent id is provided |
     | get_root                  |`/root/`                          |Get list of all root nodes. Accepts no argument                                                 |
-    | get_leaf                  |`/leaf/<id>`          	           |Get leaf nodes based on a parent id. If parent id has no direct leaf nodes it recursively       |
-    |                           |                                  |traverse tree and return leaf nodes of decendents                                               |
+    | get_leaf                  |`/leaf/<id>`          	           |Get leaf nodes based on a parent id. If parent id has no direct leaf nodes it recursively traverse tree and return leaf nodes of decendents      |
     | get_child                 |`/child/<id>`          	       |Get all immidiate childs based on parent id provided in path params                             |
 
 *Note: All routes are relative to base url*
