@@ -55,6 +55,11 @@ class Helper:
 					subtree.remove(node)
 			return subtree
 
+	# Get list of immediate child node based on parent_id
+	def getChildNodes(parent_id):
+		return FirstModel.query.filter(FirstModel.parent_id == parent_id).all()
+
+
 
 
 
