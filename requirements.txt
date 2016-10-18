@@ -7,3 +7,4 @@ psycopg2==2.6.2
 SQLAlchemy==1.1.0b3
 invoke==0.13.0
 marshmallow==2.9.1
+sqlalchemy-utils==0.32.9
