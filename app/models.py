@@ -29,14 +29,17 @@ class SecondModel(db.Model,Entity,TimestampMixin):
     description = db.Column(db.String)
     path = db.Column(LtreeType)
 
-    def __init__(self,id,created_at,updated_at,parent_id,title,description):
-        self.id = id
-        self.created_at = created_at
-        self.updated_at = updated_at
-        self.parent_id = parent_id
-        self.title = title
-        self.description = description
-    
+    def __init__(self, **kwargs):
+        print(kwargs)
+        self.__dict__.update(kwargs)
+        self.id = kwargs['row_id']
+        self.created_at = kwargs['created_at']
+        self.updated_at = kwargs['updated_at']
+        self.parent_id = kwargs['parent_id']
+        self.title = kwargs['title']
+        self.description = kwargs['description']
+        self.path = kwargs['path']
+
     
 
 
