@@ -12,7 +12,7 @@ from logging.config import fileConfig
 
 """
 author: Sohaib
-dated: 2016-10-19 04:29:35
+dated: 2016-10-19
 overview: This class help in building dummy records to perform benchmarking. It has options to switch between data models. Currently supported models are
 Adjcency List and Materialized Path Views. use command invoke --help build to view all possible options.
 """
@@ -23,7 +23,7 @@ logger = logging.getLogger('tasks')
 NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
 CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
 
-@task(help = {'name' : "Use --type aj and --type mp"})
+@task(help = {'type' : "Use --type aj and --type mp"})
 def build(ctx, type=None):
 	
 	"""

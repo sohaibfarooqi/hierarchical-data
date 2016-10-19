@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify
 from functools import wraps
 from .models import FirstModel
-from .schema import firstmodel_schema, firstmodel_schemas
+from .schema import firstmodel_schema, firstmodel_schemas, secondmodel_schema, secondmodel_schemas
 from sqlalchemy.exc import IntegrityError
 from .api_helper import Api, Resource
-from .helper import Helper
+from .helper import Helper,MPHelper
 
 api_blueprint = Blueprint('api_blueprint', __name__)
 
@@ -36,3 +36,8 @@ def get_child(parent_id = None):
 		return jsonify({'response': 'Please Specify Parent Id'})	
 	result_set = Helper.getChildNodes(parent_id)
 	return jsonify({'response': firstmodel_schemas.dump(result_set).data})
+
+@api.route('/subtree1', 'parent_id')
+def get_subtree1 (parent_id = -1):
+	result_set = MPHelper.getSubtree(parent_id)
+	return jsonify({'response': secondmodel_schemas.dump(result_set).data})

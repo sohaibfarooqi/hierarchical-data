@@ -1,7 +1,8 @@
 from .extentions import db
-from .models import FirstModel
+from .models import FirstModel,SecondModel
 from sqlalchemy.orm import aliased
 from flask import current_app as app
+from sqlalchemy_utils import Ltree
 
 class Helper:
 	# Related SO: http://stackoverflow.com/questions/24779093/query-self-referential-list-relationship-to-retrieve-several-level-child
@@ -58,6 +59,11 @@ class Helper:
 	# Get list of immediate child node based on parent_id
 	def getChildNodes(parent_id):
 		return FirstModel.query.filter(FirstModel.parent_id == parent_id).all()
+
+class MPHelper():
+
+	def getSubtree(id):
+		return SecondModel.query.filter(SecondModel.path == Ltree('None.1.2')).all()
 
 
 
