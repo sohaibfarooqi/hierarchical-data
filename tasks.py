@@ -21,16 +21,29 @@ def build(ctx, type=None):
 	if type == 'aj':
 		insertAdjecencyList()
 	elif type == 'mp':
-		insertMateriallizedPath()
+		last_id = db.session.query(SecondModel).order_by(SecondModel.id.desc()).first()
+		NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
+		CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
+		logger.info('Number of Records to be Inserted: %i', NUM_RECORDS)
+		logger.info('Chunk Size: %i', CHUNK_SIZE)
+		if last_id is None:
+			end_range = 1 + NUM_RECORDS
+			start = 1
+			parent_id = -1
+		else:
+			logger.info('Last Inserted Id: %i', last_id.id)
+			start = last_id.id + 1
+			end_range = (last_id.id + 1) + NUM_RECORDS
+			parent_id = last_id.id
+		insertMateriallizedPath(start,last_id,end_range,parent_id)
 
 	else: 
-		print('Please Specify Data-Model Type!')
+		logger.info('Please Specify Data-Model Type!')
 	
 
 	logger.info('Job Finished')
 
-def randomword(length):
-   return ''.join(random.choice(string.ascii_lowercase) for i in range(length))
+
 
 def insertAdjecencyList():
 	last_id = db.session.query(FirstModel).order_by(FirstModel.id.desc()).first()
@@ -80,60 +93,40 @@ def insertAdjecencyList():
 	db.session.commit()
 
 
-def insertMateriallizedPath():
-	last_id = db.session.query(SecondModel).order_by(SecondModel.id.desc()).first()
-	NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
-	CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
-	
-	logger.info('Number of Records to be Inserted: %i', NUM_RECORDS)
-	logger.info('Chunk Size: %i', CHUNK_SIZE)
-	
-	if last_id is None:
-		start_range = 1
-		end_range = start_range + NUM_RECORDS
-		parent_id = -1
-		path = '1'
-	
+def insertMateriallizedPath(id,last_id,end_range,parent_id):
+
+	if end_range <= 0:
+		db.session.commit()
+		return
+
 	else:
-		logger.info('Last Inserted Id: %i', last_id.id)
-		start_range = last_id.id + 1
-		end_range = start_range + NUM_RECORDS
-		parent_id = last_id.id
-		path = str(last_id.path) + '.' +str(last_id.id)
-		
-	
-	for i in range(start_range , end_range):
-		object_created_date = datetime.today() - timedelta(hours=i)
-		object_updated_date = datetime.today() - timedelta(minutes=i)
-		desc = randomword(i+10)
+		object_created_date = datetime.today() - timedelta(hours=id)
+		object_updated_date = datetime.today() - timedelta(minutes=id)
+		desc = randomword(id+10)
 		title = randomword(5)
+		path = '1'
 		model = SecondModel(
-							row_id = i,
-							created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
-							updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
-							parent_id = parent_id,
-							title = title, 
-							description = desc,
-							path = path
+								row_id = id,
+								created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
+								updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+								parent_id = parent_id,
+								title = title, 
+								description = desc,
+								path = path
 
-						   )
-
-		if i%3 == 0:
-			parent_id += 1
-			path = path + '.' +str(parent_id)
-		
-
-		
-		
+							   )
 		db.session.add(model)
 		
 		if parent_id < 0:
 			parent_id+=2
 		
+		if id % 3 == 0:
+			parent_id += 1
 		
-		if(i % CHUNK_SIZE == 0):
-			logger.info('Commiting Session Rows')
-			db.session.commit()
+		id += 1
+		end_range -= 1
+		insertMateriallizedPath(id , last_id , end_range , parent_id)
 
-	db.session.commit()	
+def randomword(length):
+   return ''.join(random.choice(string.ascii_lowercase) for i in range(length))	
 	

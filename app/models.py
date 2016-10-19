@@ -30,7 +30,6 @@ class SecondModel(db.Model,Entity,TimestampMixin):
     path = db.Column(LtreeType)
 
     def __init__(self, **kwargs):
-        print(kwargs)
         self.__dict__.update(kwargs)
         self.id = kwargs['row_id']
         self.created_at = kwargs['created_at']
