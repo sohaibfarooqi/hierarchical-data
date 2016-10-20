@@ -5,7 +5,7 @@ from flask import current_app as app
 from sqlalchemy_utils import Ltree
 
 class Helper:
-	# Related SO: http://stackoverflow.com/questions/24779093/query-self-referential-list-relationship-to-retrieve-several-level-child
+	# SO: http://stackoverflow.com/questions/24779093/query-self-referential-list-relationship-to-retrieve-several-level-child
 	# Docs: http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=cte#sqlalchemy.orm.query.Query.cte
 	def getSubTree(parent_id):
 		roots = FirstModel.query.filter(FirstModel.parent_id == parent_id).all()
@@ -62,11 +62,8 @@ class Helper:
 
 class MPHelper():
 
+	#Using Custom opertator in SQLAlchemy (Docs):
+	#http://docs.sqlalchemy.org/en/latest/core/custom_types.html#redefining-and-creating-new-operators
+	#SO: http://stackoverflow.com/questions/12212636/sql-alchemy-overriding
 	def getSubtree(id):
-		return SecondModel.query.filter(SecondModel.path == Ltree('None.1.2')).all()
-
-
-
-
-
-
+		return SecondModel.query.filter(SecondModel.path.descendant_of(Ltree('None.1'))).all()
