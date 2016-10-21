@@ -41,3 +41,8 @@ def get_child(parent_id = None):
 def get_subtree1 (parent_id = None):
 	result_set = MPHelper.getSubTree(parent_id)
 	return jsonify({'response': secondmodel_schemas.dump(result_set).data})
+
+@api.route('/lquery', 'parent_id')
+def get_subtree11 (parent_id = None):
+	result_set = MPHelper.doLQuery(parent_id)
+	return jsonify({'response': secondmodel_schemas.dump(result_set).data})

@@ -6,21 +6,36 @@ from sqlalchemy_utils import Ltree
 
 class Helper:
 	
+	# Implemented in subclasses
 	def getSubTree(parent_id):
 		raise NotImplementedError()
 
+	 # Get all root nodes based on parent_id
 	def getRootNodes():
-		raise NotImplementedError()
+		root = FirstModel.query.filter(FirstModel.parent_id == app.config["ROOT_ID"]).all()
+		return root
 
+	# Get all leaf nodes based on a parent_id. if no parent is provided it will return all leaf nodes.
 	def getLeafNodes(parent_id = None):
-		raise NotImplementedError()
+		if parent_id is None:
+			first_model_alias = aliased(FirstModel)
+			return FirstModel.query.outerjoin(first_model_alias, FirstModel.id == first_model_alias.parent_id).filter(first_model_alias.parent_id == None).all()
+		
+		else:
+			subtree = AJHelper.getSubTree(parent_id)
+			for node in subtree:
+				if node.id in [data.parent_id for data in subtree]:
+					subtree.remove(node)
+			return subtree
 
+	# Get list of immediate child node based on parent_id
 	def getChildNodes(parent_id):
-		raise NotImplementedError()
+		return FirstModel.query.filter(FirstModel.parent_id == parent_id).all()
 
 class AJHelper(Helper):
 	
 	def getSubTree(parent_id):
+		
 		"""
 		SO: http://stackoverflow.com/questions/24779093/query-self-referential-list-relationship-to-retrieve-several-level-child
 	    Docs: http://docs.sqlalchemy.org/en/rel_1_0/orm/query.html?highlight=cte#sqlalchemy.orm.query.Query.cte
@@ -53,32 +68,12 @@ class AJHelper(Helper):
 			result_set.extend(result)
 		return result_set
 
-    # Get all root nodes based on parent_id
-	def getRootNodes():
-		root = FirstModel.query.filter(FirstModel.parent_id == app.config["ROOT_ID"]).all()
-		return root
-
-	# Get all leaf nodes based on a parent_id. if no parent is provided it will return all leaf nodes.
-	def getLeafNodes(parent_id = None):
-		if parent_id is None:
-			first_model_alias = aliased(FirstModel)
-			return FirstModel.query.outerjoin(first_model_alias, FirstModel.id == first_model_alias.parent_id).filter(first_model_alias.parent_id == None).all()
-		
-		else:
-			subtree = Helper.getSubTree(parent_id)
-			for node in subtree:
-				if node.id in [data.parent_id for data in subtree]:
-					subtree.remove(node)
-			return subtree
-
-	# Get list of immediate child node based on parent_id
-	def getChildNodes(parent_id):
-		return FirstModel.query.filter(FirstModel.parent_id == parent_id).all()
-
+   
 class MPHelper(Helper):
 
 	
 	def getSubTree(id):
+		
 		"""
 		Using Custom opertator in SQLAlchemy (Docs):
 		http://docs.sqlalchemy.org/en/latest/core/custom_types.html#redefining-and-creating-new-operators
@@ -86,3 +81,10 @@ class MPHelper(Helper):
 		"""
 		subq = SecondModel.query.with_entities(SecondModel.path).filter(SecondModel.id == id).subquery()
 		return SecondModel.query.filter(SecondModel.path.descendant_of(subq)).all()
+
+	def doLQuery(id):
+		if id is None:
+			expr = Ltree('None.*')
+		else:
+			expr = Ltree("*." + str(id) + ".*") #Validation fails at this point. 
+			return SecondModel.query.filter(SecondModel.path.lquery(expr)).all()
