@@ -38,6 +38,6 @@ def get_child(parent_id = None):
 	return jsonify({'response': firstmodel_schemas.dump(result_set).data})
 
 @api.route('/subtree1', 'parent_id')
-def get_subtree1 (parent_id = -1):
-	result_set = MPHelper.getSubtree(parent_id)
+def get_subtree1 (parent_id = None):
+	result_set = MPHelper.getSubTree(parent_id)
 	return jsonify({'response': secondmodel_schemas.dump(result_set).data})

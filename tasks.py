@@ -8,6 +8,7 @@ from app.app import create_app
 import os
 import logging
 from logging.config import fileConfig
+from sqlalchemy_utils import Ltree
 
 
 """
@@ -100,7 +101,7 @@ def insertMateriallizedPath(last_id,start_range,end_range,parent_id,parent_path)
 								parent_id = parent_id,
 								title = title, 
 								description = desc,
-								path = parent_path
+								path = Ltree(parent_path  + "." + str(i))
 
 							   )
 		db.session.add(model)
@@ -113,7 +114,7 @@ def insertMateriallizedPath(last_id,start_range,end_range,parent_id,parent_path)
 			parent_id += 1
 			parent_object = SecondModel.query.filter(SecondModel.id == parent_id).first()
 			if parent_object is not None:
-				parent_path = str(parent_object.path) + "." + str(parent_id)
+				parent_path = str(parent_object.path)
 		
 		if(i % CHUNK_SIZE == 0):
 			logger.info('Commiting Session Rows')
@@ -137,6 +138,6 @@ def getMeta(id):
 		end_range = (id.id + 1) + NUM_RECORDS
 		parent_id = id.parent_id
 		parent_object = SecondModel.query.filter(SecondModel.id == parent_id).first()
-		path = str(parent_object.path) + "." + str(parent_id)
+		path = str(parent_object.path)
 		return start,end_range,parent_id,path
 
