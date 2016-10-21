@@ -14,13 +14,15 @@ class FirstModel(db.Model,Entity,TimestampMixin):
     title = db.Column(db.String)
     description = db.Column(db.String)
 
-    def __init__(self,id,created_at,updated_at,parent_id,title,description):
-        self.id = id
-        self.created_at = created_at
-        self.updated_at = updated_at
-        self.parent_id = parent_id
-        self.title = title
-        self.description = description
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+        if kwargs != {}:
+            self.id = kwargs['id']
+            self.created_at = kwargs['created_at']
+            self.updated_at = kwargs['updated_at']
+            self.parent_id = kwargs['parent_id']
+            self.title = kwargs['title']
+            self.description = kwargs['description']
 
 
 class SecondModel(db.Model,Entity,TimestampMixin):
