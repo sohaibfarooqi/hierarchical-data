@@ -1,6 +1,9 @@
 from flask.views import MethodView
 
-class Api:
+class RouteHanlder:
+    """
+    Defines all routing rules
+    """
     def __init__(self, blueprint):
         self.blueprint = blueprint
 

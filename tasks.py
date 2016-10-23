@@ -67,12 +67,12 @@ def insertAdjecencyList(last_id,start_range,end_range,parent_id):
 			parent_id += 1
 
 		model = FirstModel(
-							i,
-							object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
-							object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
-							parent_id,
-							title, 
-							desc
+							id = i,
+							created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
+							updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+							parent_id = parent_id,
+							title = title, 
+							description = desc
 						   )
 		
 		db.session.add(model)
