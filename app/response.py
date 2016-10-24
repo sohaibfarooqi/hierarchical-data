@@ -16,7 +16,7 @@ class Response():
 			raise
 
 	def create_error_response(error):
-		if(err.has(args))
+		if(err.has(args)):
 			return jsonify({"errors": error.args })
 		else:
 			return jsonify({"errors": "No Message Available"})

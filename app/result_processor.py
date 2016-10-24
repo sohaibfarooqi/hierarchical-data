@@ -14,5 +14,5 @@ class ResultProcessor:
 			action = QueryManager.getAction(script_root, type)
 			return QueryManager.executeQuery(model, action, parent_id)
 		
-		except ValueError as error:
+		except (ValueError,RuntimeError) as error:
 			raise

@@ -94,7 +94,7 @@ class QueryHelper():
 		
 		if args[1] is None:
 			#rasie Error
-			return None
+			raise RuntimeError("Parent Id cannot be None")
 		else:
 			return args[0].query.filter(args[0].parent_id == args[1]).all()
 

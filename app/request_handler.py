@@ -17,7 +17,7 @@ class RequestHandler():
 			else:
 				return Response.create_404_response(None)
 		
-		except ValueError as error:
+		except (ValueError,RuntimeError) as error:
 			return Response.create_error_response(error)
 
 
