@@ -14,7 +14,6 @@ class RequestHandler():
 			
 			if len(result_set) > 0:
 				return Response.create_response(result_set)
-			
 			else:
 				return Response.create_404_response(None)
 		

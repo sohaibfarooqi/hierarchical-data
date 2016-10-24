@@ -8,19 +8,25 @@ class Response():
 	"""
 
 	def create_response(result_set):
-		mapper = Mapper.getMapper(result_set)
-		final_response = jsonify({"data": mapper.dump(result_set).data})
-		return final_response
+		try:
+			mapper = Mapper.getMapper(result_set)
+			final_response = jsonify({"data": mapper.dump(result_set).data})
+			return final_response
+		except ValueError:
+			raise
 
 	def create_error_response(error):
-		return jsonify({"errors": error.args })
+		if(err.has(args))
+			return jsonify({"errors": error.args })
+		else:
+			return jsonify({"errors": "No Message Available"})
 
 	def create_404_response(details):
 		
 		if details is None:
 			return jsonify({"message": "No data available" })
 		else:
-			return jsonify({"message": detals.args })
+			return Response.create_error_response(details)
 
 
 class Mapper():
@@ -37,6 +43,4 @@ class Mapper():
 			return entity_schema
 
 		else:
-			# No Mapper Found
-			print("No Mapper Found")
-			return None
+			raise ValueError('No Mapper found against {instance}'.format(instance = repr(instance)))
