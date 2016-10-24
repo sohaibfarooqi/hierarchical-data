@@ -63,6 +63,14 @@ class QueryManager:
 
 class QueryHelper():
 	
+	#Factory method to get Subtree based on type of model instance
+	def getSubTree(*args):
+		if type(arg[0]) == FirstModel:
+			return SpecilizedQueryHelper.getAjSubTree(*args)
+		elif type(arg[0]) == SecondModel:
+			return SpecilizedQueryHelper.getMpSubTree(*args)
+		else:
+			raise ValueError("Subtree not implemented")
 	# Get all root nodes. (Will be useful in case of Multiple trees)
 	def getRootNodes(*args):
 		root = args[0].query.filter(args[0].parent_id == app.config["ROOT_ID"]).all()
@@ -75,7 +83,7 @@ class QueryHelper():
 			return args[0].query.outerjoin(model_alias, args[0].id == model_alias.parent_id).filter(model_alias.parent_id == None).all()
 		
 		else:
-			subtree = QueryHelper.getSubTree(parent_id, Model)
+			subtree = QueryHelper.getSubTree(*args)
 			for node in subtree:
 				if node.id in [data.parent_id for data in subtree]:
 					subtree.remove(node)
@@ -89,7 +97,17 @@ class QueryHelper():
 			return None
 		else:
 			return args[0].query.filter(args[0].parent_id == args[1]).all()
-	
+
+	def LQuery(*args):
+		
+		if args[1] is None:
+			expr = Ltree('None.*')
+		else:
+			expr = Ltree("*." + str(arg[1]) + ".*") #Validation fails at this point. 
+			return args[0].query.filter(args[0].path.lquery(expr)).all()
+
+class SpecilizedQueryHelper(QueryHelper):
+
 	def getAjSubTree(*args):
 
 		"""
@@ -133,11 +151,3 @@ class QueryHelper():
 		"""
 		subq = args[0].query.with_entities(args[0].path).filter(args[0].id == args[1]).subquery()
 		return args[0].query.filter(args[0].path.descendant_of(subq)).all()
-	
-	def LQuery(*args):
-		
-		if args[1] is None:
-			expr = Ltree('None.*')
-		else:
-			expr = Ltree("*." + str(arg[1]) + ".*") #Validation fails at this point. 
-			return args[0].query.filter(args[0].path.lquery(expr)).all()
