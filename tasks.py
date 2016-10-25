@@ -182,11 +182,11 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 		insertLftRgt(root, key, 0)
 
 
-
+#FIXME: Need terminating condition
 def insertLftRgt(root, child, i):
 
 	if type(child) == NestedSetModel:
-		child.lft = root.lft + 1
+		child.lft = root.lft + (i + 1)
 		db.session.add(child)
 		db.session.commit()
 		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
@@ -195,12 +195,13 @@ def insertLftRgt(root, child, i):
 
 		print(root.id)
 		print(i)
-		child[i].lft = root.lft + 1
+		child[i].lft = root.lft + (i + 1)
 		db.session.add(child[i])
 		db.session.commit()
 		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child[i].id).all()
 		print(child_nodes)
-		
+	T-pin: 2017
+	password: iceandfire	
 	
 	if len(child_nodes) > 0:
 		i = 0
@@ -210,15 +211,24 @@ def insertLftRgt(root, child, i):
 		else:	
 			insertLftRgt(child[i], child_nodes, i)
 	else:
-		if i == 0:
-			child[i].lft = root.lft + 1
-			child[i].rgt = child[i].lft + 1
-			db.session.add(child[i])
+		
+		if type(child) == NestedSetModel:
+			child.lft = root.lft + (i + 1)
+			child.rgt = child.lft + 1
+			db.session.add(child)
 			db.session.commit()
+			i = i + 1
+			print(child.id)
+			insertLftRgt(root, child, i)
+			
 		else:
-			child[i].rgt = root.lft + 1
+			child[i].lft = root.lft + (i + 1)
+			child[i].rgt = child[i].lft + (i + 1)
 			db.session.add(child[i])
 			db.session.commit()
+			i = i + 1
+			insertLftRgt(root, child[i], i)
+		return
 
 
 
