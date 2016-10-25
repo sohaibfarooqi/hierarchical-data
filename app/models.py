@@ -50,16 +50,7 @@ class NestedSetModel(db.Model,Entity,TimestampMixin):
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.id = kwargs['row_id']
-        self.created_at = kwargs['created_at']
-        self.updated_at = kwargs['updated_at']
-        self.parent_id = kwargs['parent_id']
-        self.title = kwargs['title']
-        self.description = kwargs['description']
-        self.lft = kwargs['left']
-        self.rgt = kwargs['right']
-
-    
-
+        for key in kwargs:
+            self.key = kwargs[key]
 
 

@@ -1,6 +1,6 @@
 from invoke import task
 from config import ApplicationConfig
-from app.models import FirstModel,SecondModel
+from app.models import FirstModel,SecondModel,NestedSetModel
 from app.extentions import db
 from datetime import datetime,timedelta
 import random, string
@@ -46,6 +46,11 @@ def build(ctx, type=None):
 		last_id = db.session.query(SecondModel).order_by(SecondModel.id.desc()).first()
 		start,end_range,parent_id,path = getMeta(last_id)
 		insertMateriallizedPath(last_id,start,end_range,parent_id,path)
+
+	elif type == 'ns':
+		last_id = db.session.query(NestedSetModel).order_by(NestedSetModel.id.desc()).first()
+		start,end_range,parent_id,path = getMeta(last_id)
+		insertNestedSet(last_id,start,end_range,parent_id,path)
 
 	else: 
 		logger.info('Please Specify Data-Model Type! Use --help for more info')
@@ -120,6 +125,91 @@ def insertMateriallizedPath(last_id,start_range,end_range,parent_id,parent_path)
 			logger.info('Commiting Session Rows')
 			db.session.commit()
 		db.session.commit()
+
+def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
+	
+	"""
+	- Inserting Tree
+	"""
+
+	for i in range(start_range , end_range):
+		object_created_date = datetime.today() - timedelta(hours=i)
+		object_updated_date = datetime.today() - timedelta(minutes=i)
+		desc = randomword(i+10)
+		title = randomword(5)
+
+		if i%3 == 0:
+			parent_id += 1
+
+		model = NestedSetModel(
+							id = i,
+							created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
+							updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+							parent_id = parent_id,
+							title = title, 
+							description = desc
+						   )
+		
+		db.session.add(model)
+		
+		if parent_id < 0:
+			parent_id+=2
+		
+		if(i % CHUNK_SIZE == 0):
+			logger.info('Commiting Session Rows')
+			db.session.commit()
+
+	db.session.commit()
+
+	"""
+	- Inserting Left and Right of nodes
+	"""
+	if last_id is None:
+		parent_id = 1
+	else:
+		parent_id = last_id.id
+	
+	root = NestedSetModel.query.filter(NestedSetModel.id == parent_id).first()
+	root.lft = 2
+	db.session.add(root)
+	db.session.commit()
+
+	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == parent_id).all()
+	for key in child_nodes:
+		insertLftRgt(root, key, 0)
+
+
+
+def insertLftRgt(root, child, i):
+	
+	if i == 0:
+		child.lft = root.lft + 1
+		db.session.add(child)
+		db.session.commit()
+	else:
+		child[i].lft = root.lft + 1
+		db.session.add(child[i])
+		db.session.commit()
+	
+	
+
+	if i == 0:
+		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
+	
+	if len(child_nodes) > 0:
+		i = i + 1
+		insertLftRgt(child, child_nodes, i)
+	else:
+		if i == 0:
+			child.rgt = child.lft + 1
+			db.session.add(child)
+			db.session.commit()
+		else:
+			child[i].rgt = root.lft + 1
+			db.session.add(child[i])
+			db.session.commit()
+
+
 
 
 def randomword(length):
