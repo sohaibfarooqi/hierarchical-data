@@ -165,49 +165,61 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 	- Inserting Left and Right of nodes
 	"""
 	if last_id is None:
-		parent_id = 1
+		parent_id = -1
 	else:
 		parent_id = last_id.id
 	
-	root = NestedSetModel.query.filter(NestedSetModel.id == parent_id).first()
-	root.lft = 2
+	root = NestedSetModel.query.filter(NestedSetModel.parent_id == parent_id).first()
+	#print(root.id)
+	root.lft = 1
 	db.session.add(root)
 	db.session.commit()
+	#print(root.lft)
 
-	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == parent_id).all()
+	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == root.id).all()
 	for key in child_nodes:
+		#print(key.id)
 		insertLftRgt(root, key, 0)
 
 
 
 def insertLftRgt(root, child, i):
-	
-	if i == 0:
+
+	if type(child) == NestedSetModel:
 		child.lft = root.lft + 1
 		db.session.add(child)
 		db.session.commit()
+		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
+		print('I came Here')
 	else:
+
+		print(root.id)
+		print(i)
 		child[i].lft = root.lft + 1
 		db.session.add(child[i])
 		db.session.commit()
-	
-	
-
-	if i == 0:
-		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
+		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child[i].id).all()
+		print(child_nodes)
+		
 	
 	if len(child_nodes) > 0:
-		i = i + 1
-		insertLftRgt(child, child_nodes, i)
+		i = 0
+		
+		if type(child) == NestedSetModel:
+			insertLftRgt(child, child_nodes, i)
+		else:	
+			insertLftRgt(child[i], child_nodes, i)
 	else:
 		if i == 0:
-			child.rgt = child.lft + 1
-			db.session.add(child)
+			child[i].lft = root.lft + 1
+			child[i].rgt = child[i].lft + 1
+			db.session.add(child[i])
 			db.session.commit()
 		else:
 			child[i].rgt = root.lft + 1
 			db.session.add(child[i])
 			db.session.commit()
+
 
 
 
