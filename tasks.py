@@ -176,60 +176,45 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 	db.session.commit()
 	#print(root.lft)
 
-	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == root.id).all()
-	for key in child_nodes:
-		#print(key.id)
-		insertLftRgt(root, key, 0)
+	# child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == root.id).all()
+	# for key in child_nodes:
+	# 	#print(key.id)
+	# 	insertLftRgt(root, key)
+	graph = {1: set([2]),
+         	 2: set([3, 4, 5]),
+         	 3: set([6, 7, 8]),
+         	 4: set([9, 10])}
+	
+	sub_graph = dfs(graph, 3)
+	print(sub_graph)
 
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    if start in graph:
+    	for next in graph[start] - visited:
+    		dfs(graph, next, visited)
+    return visited
 
 #FIXME: Need terminating condition
-def insertLftRgt(root, child, i):
+def insertLftRgt(root, child):
 
-	if type(child) == NestedSetModel:
-		child.lft = root.lft + (i + 1)
-		db.session.add(child)
-		db.session.commit()
-		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
-		print('I came Here')
-	else:
+	child.lft = root.lft + 1
+	db.session.add(child)
+	db.session.commit()
+	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
 
-		print(root.id)
-		print(i)
-		child[i].lft = root.lft + (i + 1)
-		db.session.add(child[i])
-		db.session.commit()
-		child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child[i].id).all()
-		print(child_nodes)
-	T-pin: 2017
-	password: iceandfire	
+	for index, node in enumerate(child_nodes):
+		insertLftRgt(child, node)
 	
-	if len(child_nodes) > 0:
-		i = 0
-		
-		if type(child) == NestedSetModel:
-			insertLftRgt(child, child_nodes, i)
-		else:	
-			insertLftRgt(child[i], child_nodes, i)
-	else:
-		
-		if type(child) == NestedSetModel:
-			child.lft = root.lft + (i + 1)
-			child.rgt = child.lft + 1
-			db.session.add(child)
-			db.session.commit()
-			i = i + 1
-			print(child.id)
-			insertLftRgt(root, child, i)
-			
-		else:
-			child[i].lft = root.lft + (i + 1)
-			child[i].rgt = child[i].lft + (i + 1)
-			db.session.add(child[i])
-			db.session.commit()
-			i = i + 1
-			insertLftRgt(root, child[i], i)
-		return
-
+	child.lft = root.lft + 1
+	child.rgt = child.lft + 1
+	db.session.add(child)
+	db.session.commit()
+	print(child.id)
+	insertLftRgt(root, child)
+	
 
 
 
