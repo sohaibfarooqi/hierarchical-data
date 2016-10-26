@@ -169,52 +169,51 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 	else:
 		parent_id = last_id.id
 	
-	root = NestedSetModel.query.filter(NestedSetModel.parent_id == parent_id).first()
-	#print(root.id)
-	root.lft = 1
-	db.session.add(root)
-	db.session.commit()
-	#print(root.lft)
-
-	# child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == root.id).all()
-	# for key in child_nodes:
-	# 	#print(key.id)
-	# 	insertLftRgt(root, key)
-	graph = {1: set([2]),
-         	 2: set([3, 4, 5]),
-         	 3: set([6, 7, 8]),
-         	 4: set([9, 10])}
+	tree = NestedSetModel.query\
+						.with_entities(NestedSetModel.id, NestedSetModel.parent_id)\
+						.filter(NestedSetModel.rgt == None)\
+						.all()
 	
-	sub_graph = dfs(graph, 3)
-	print(sub_graph)
+	graph = {}
+	
+	for child in tree:
+		childs = set([child_node.id for child_node in tree if child_node.parent_id == child.id])
+		if childs.__len__() > 0:
+			graph[child.id] = childs
 
-def dfs(graph, start, visited=None):
+	dfs(graph, 1, 1)
+
+def dfs(graph, start, left, visited = None):
+    
     if visited is None:
         visited = set()
+    #print("VISITED")
     visited.add(start)
+    node = NestedSetModel.query.filter(NestedSetModel.id == start).first()
+    node.lft = left
+    db.session.add(node)
+    db.session.commit()
+
+    #print("Node Left Above: ", left)
+    #print("LEFT: ", left)
     if start in graph:
     	for next in graph[start] - visited:
-    		dfs(graph, next, visited)
-    return visited
+    		left = left + 1
+    		#print("Next: ",next)
+    		#print("Visited: ",visited)
+    		dfs(graph, next, left, visited)
+    print("Start: ", start)
+    #print("End Visited: ", visited)
+    left = left + 1
+    node.lft = left
+    right = left + 1
+    node.rgt = right
+    print("Node Right: ", left)
+    print("Node Left: ", node.lft)
+    db.session.add(node)
+    db.session.commit()
 
-#FIXME: Need terminating condition
-def insertLftRgt(root, child):
-
-	child.lft = root.lft + 1
-	db.session.add(child)
-	db.session.commit()
-	child_nodes = NestedSetModel.query.filter(NestedSetModel.parent_id == child.id).all()
-
-	for index, node in enumerate(child_nodes):
-		insertLftRgt(child, node)
-	
-	child.lft = root.lft + 1
-	child.rgt = child.lft + 1
-	db.session.add(child)
-	db.session.commit()
-	print(child.id)
-	insertLftRgt(root, child)
-	
+    return visited	
 
 
 
