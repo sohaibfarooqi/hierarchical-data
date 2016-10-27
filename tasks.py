@@ -23,6 +23,7 @@ fileConfig('logging_config.ini')
 logger = logging.getLogger('tasks')
 NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
 CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
+LEFT = 1
 
 @task(help = {'type' : "Use --type aj and --type mp"})
 def build(ctx, type=None):
@@ -181,37 +182,40 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 		if childs.__len__() > 0:
 			graph[child.id] = childs
 
-	dfs(graph, 1, 1)
+	dfs(graph, 1)
 
-def dfs(graph, start, left, visited = None):
-    
+def dfs(graph, start, visited = None):
+
     if visited is None:
-        visited = set()
-    #print("VISITED")
+    	visited = set()
     visited.add(start)
-    node = NestedSetModel.query.filter(NestedSetModel.id == start).first()
-    node.lft = left
-    db.session.add(node)
-    db.session.commit()
-
-    #print("Node Left Above: ", left)
-    #print("LEFT: ", left)
+    global LEFT
     if start in graph:
+    	
+    	node = NestedSetModel.query.filter(NestedSetModel.id == start).first()
+    	node.lft = LEFT
+    	db.session.add(node)
+    	db.session.commit()
+    	
     	for next in graph[start] - visited:
-    		left = left + 1
-    		#print("Next: ",next)
-    		#print("Visited: ",visited)
-    		dfs(graph, next, left, visited)
-    print("Start: ", start)
-    #print("End Visited: ", visited)
-    left = left + 1
-    node.lft = left
-    right = left + 1
-    node.rgt = right
-    print("Node Right: ", left)
-    print("Node Left: ", node.lft)
-    db.session.add(node)
-    db.session.commit()
+    		LEFT = LEFT + 1
+    		dfs(graph, next, visited)
+    if start not in graph:
+    	node = NestedSetModel.query.filter(NestedSetModel.id == start).first()
+    	node.lft = LEFT
+    	LEFT = LEFT + 1
+    	node.rgt = LEFT
+    	db.session.add(node)
+    	db.session.commit()
+    
+    else:
+    	if graph[start].issubset(visited):
+    		node = NestedSetModel.query.filter(NestedSetModel.id == start).first()
+    		LEFT = LEFT + 1
+    		node.rgt = LEFT
+    		db.session.add(node)
+    		db.session.commit()		 
+
 
     return visited	
 
