@@ -2,7 +2,7 @@ from .extentions import db
 from sqlalchemy.orm import aliased
 from flask import current_app as app
 from sqlalchemy_utils import Ltree
-from .models import FirstModel, SecondModel
+from .models import FirstModel, SecondModel, NestedSetModel
 
 class QueryManager:
 
@@ -13,11 +13,11 @@ class QueryManager:
 
 	#defines dict of all avaliable methods in QueryHelper class. Type specific methods are nested in sub-dict
 	__all_methods__ = {
-						'child': 'getChildNodes', 
-						'leaf' : 'getLeafNodes', 
-						'root' : 'getRootNodes', 
-						'lquery': 'LQuery', 
-						'subtree': {'aj': 'getAjSubTree', 'mp': 'getMpSubTree'}
+						'child'   : 'getChildNodes', 
+						'leaf'    : 'getLeafNodes', 
+						'root'    : 'getRootNodes', 
+						'lquery'  : 'LQuery', 
+						'subtree' : 'getSubTree'
 					   }
 	
 	def getModel(model_type):
@@ -31,6 +31,9 @@ class QueryManager:
 		
 		elif model_type == 'aj':
 			return FirstModel
+
+		elif model_type == 'ns':
+			return NestedSetModel
 			
 		else:
 			raise ValueError('Model Type: {model_type} Not Implemented'.format(model_type = repr(model_type)))
@@ -44,13 +47,7 @@ class QueryManager:
 		"""
 
 		if script_root in QueryManager.__all_methods__:
-			
-			if type(QueryManager.__all_methods__[script_root]) == dict:
-				if model_type in QueryManager.__all_methods__[script_root]:
-					return QueryManager.__all_methods__[script_root][model_type]
-			
-			else:	
-				return QueryManager.__all_methods__[script_root]
+			return QueryManager.__all_methods__[script_root]
 
 		else:
 			raise ValueError("Action {script_root} Not Implemeted".format(script_root = repr(script_root)))
@@ -65,12 +62,19 @@ class QueryHelper():
 	
 	#Factory method to get Subtree based on type of model instance
 	def getSubTree(*args):
-		if type(arg[0]) == FirstModel:
+
+		if args[0] == FirstModel:
 			return SpecilizedQueryHelper.getAjSubTree(*args)
-		elif type(arg[0]) == SecondModel:
+		
+		elif args[0] == SecondModel:
 			return SpecilizedQueryHelper.getMpSubTree(*args)
+		
+		elif args[0] == NestedSetModel:
+			return SpecilizedQueryHelper.getNsSubTree(*args)
+		
 		else:
 			raise ValueError("Subtree not implemented")
+	
 	# Get all root nodes. (Will be useful in case of Multiple trees)
 	def getRootNodes(*args):
 		root = args[0].query.filter(args[0].parent_id == app.config["ROOT_ID"]).all()
@@ -151,3 +155,11 @@ class SpecilizedQueryHelper(QueryHelper):
 		"""
 		subq = args[0].query.with_entities(args[0].path).filter(args[0].id == args[1]).subquery()
 		return args[0].query.filter(args[0].path.descendant_of(subq)).all()
+
+	def getNsSubTree(*args):
+		
+		"""
+		Related Artical: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+		"""
+		left,right = args[0].query.with_entities(args[0].lft, args[0].rgt).filter(args[0].id == args[1]).first()
+		return args[0].query.filter(args[0].lft.between(left,right)).all()

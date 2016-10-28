@@ -12,29 +12,27 @@ from sqlalchemy_utils import Ltree
 
 
 """
-author: Sohaib
 dated: 2016-10-19
-overview: This class help in building dummy records to perform benchmarking. It has options to switch between data models. Currently supported models are
-Adjcency List and Materialized Path Views. use command invoke --help build to view all possible options.
+overview: This class help in building dummy records to perform benchmarking. It has options to switch between data models. Currently supported models types are
+Adjcency List, Materialized Path Views and Nested Set. use command invoke --help build to view all possible options.
 """
 
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger('tasks')
-NUM_RECORDS = int(os.getenv('NUM_RECORDS', 10))
-CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 10))
+app = create_app(ApplicationConfig).app_context().push()
+NUM_RECORDS = ApplicationConfig.NUM_RECORDS
+CHUNK_SIZE = ApplicationConfig.CHUNK_SIZE
 LEFT = 1
 
-@task(help = {'type' : "Use --type aj and --type mp"})
+@task(help = {'type' : "Use --type aj OR --type mp OR --type ns For AdjecencyList, MateriallizedPath, NestedSetModel respectively"})
 def build(ctx, type=None):
 	
 	"""
-	Insert Test data for benchmarking. See options for more details.
+	Insert Test data to specified table. See help for more details.
 	"""
 	
 	logger.info('Job Started')
-	create_app(ApplicationConfig).app_context().push()
-	
 	logger.info('Number of Records to be Inserted: %i', NUM_RECORDS)
 	logger.info('Chunk Size: %i', CHUNK_SIZE)
 	
@@ -143,13 +141,13 @@ def insertNestedSet(last_id,start_range,end_range,parent_id,parent_path):
 			parent_id += 1
 
 		model = NestedSetModel(
-							id = i,
-							created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
-							updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
-							parent_id = parent_id,
-							title = title, 
-							description = desc
-						   )
+								id = i,
+								created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
+								updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
+								parent_id = parent_id,
+								title = title, 
+								description = desc
+					   		)
 		
 		db.session.add(model)
 		

@@ -8,3 +8,5 @@ class ApplicationConfig:
     DEBUG = os.environ.get('FLASK_DEBUG', False)
     SECRET_KEY = 'abcs'
     ROOT_ID = -1
+    NUM_RECORDS = 100
+    CHUNK_SIZE = 10
