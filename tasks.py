@@ -12,8 +12,8 @@ from sqlalchemy_utils import Ltree
 
 
 """
-dated: 2016-10-19
-overview: This class help in building dummy records to perform benchmarking. It has options to switch between data models. Currently supported models types are
+Dated: 2016-10-19
+Overview: This class help in building dummy records to perform benchmarking. It has options to switch between data models. Currently supported models types are
 Adjcency List, Materialized Path Views and Nested Set. use command invoke --help build to view all possible options.
 """
 

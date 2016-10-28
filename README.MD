@@ -54,6 +54,12 @@ Application provides following end-points:
 **Example Request:** `www.mydomain.com/subtree/1/?type=ns`
 
 ## Benchmarking
+HTTP request time benchmarking is performed using [wrk](https://github.com/wg/wrk). First test is done on 
+`getSubTree()` with 100 tree nodes. 
+
+Nested set produced following results:
+![Nested Set Model Results](https://unsgdg.bl3301.livefilestore.com/y3mNFl8niH8yIeZFFQztmsvsgj9cUErVGo-YUmrAsocR108JUPgxLxc_wEzNs3AaMLJkKgPdTS6jLtAbkvonnYoiLTZ2RBchoLol5FRCluAR-AO6u9WnfIcGaZlLu70ZEkBVcKz7tgntRh0zDwe_04Zi-INhj3RZvytWLXmfVjKvYA?width=1301&height=744&cropmode=none)
+
 
 ## Related Links
 
