@@ -38,15 +38,17 @@ Following methods are used for benchmarking response and query time.
 
 ## Routes
 Application provides following end-points:
-
-**Query Params**: To test the requests mentioned below, you need to provide `type = aj`, `type = mp` and `type = ns` for adjcency list, materialized path views and nested set. If `type` param is absent, the request will throw an error.
-    
+   
     | function                     |Route                              |Description                                                                                 |
     |---------------------------|----------------------------------|------------------------------------------------------------------------------------------------|
     | get_subtree               |`/subtree/<id>`          	       |Get sub tree based on parent id provided in path params. It returns whole tree if no parent id is provided |
     | get_root                  |`/root/`                          |Get list of all root nodes. Accepts no argument                                                 |
     | get_leaf                  |`/leaf/<id>`          	           |Get leaf nodes based on a parent id. If parent id has no direct leaf nodes it recursively traverse tree and return leaf nodes of decendents      |
     | get_child                 |`/child/<id>`          	       |Get all immidiate childs based on parent id provided in path params                             |
+
+**Query Params**: To test the requests mentioned below, you need to provide `type = aj`, `type = mp` and `type = ns` for adjcency list, materialized path views and nested set. If `type` param is absent, the request will throw an error.
+
+**Example Request:** `www.mydomain.com/subtree/1/?type=ns`
 
 *Note: All routes are relative to base url*
 
