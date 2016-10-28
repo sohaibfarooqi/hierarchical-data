@@ -1,5 +1,5 @@
 ## Overview
-This project aims to compare different methods of retrieving hirercharical data using Python (Flask Framework) and PostgreSQL. 
+This project aims to compare different methods of retrieving hirercharical data using Python (Flask Framework) and PostgreSQL. It will benchmark query, response time and also provides brief note on pros and cons of each methods.
 
 ## Tools
 Following tools are used for benchmarking
@@ -27,7 +27,7 @@ For all possible options please see `invoke --help build`.
 
 By default it inserts 10 rows, However you can modify this behaviour by updating *NUM_RECORDS* in `config.py`. If you are inserting significantly large number of rows you should also consider updating *CHUNK_SIZE* variable in `config.py`. This variable defines the number of rows after which SQLAlchemy should issue a commit command to the db. After successful completion of the job you can see records in your specified table.
 
-## Implemented Methods Overview:
+## Methods Overview:
 Following methods are used for benchmarking response and query time.
  
  - ### Adjcency List
@@ -45,10 +45,14 @@ Application provides following end-points:
 | get_root      | `/root/`          | Get list of all root nodes. Accepts no argument                                                            |
 | get_leaf      | `/leaf/<id>`      | Get leaf nodes based on a parent id. If parent id has no direct leaf nodes it recursively traverse tree and return leaf nodes of decendents |
 | get_child     | `/child/<id>`     | Get all immidiate childs based on parent id provided in path params                                        |
+*Note: All routes are relative to base url*
 
-**Query Params**: To test the requests mentioned below, you need to provide `type = aj`, `type = mp` and `type = ns` for adjcency list, materialized path views and nested set. If `type` param is absent, the request will throw an error.
+**Query Params**: To test the requests mentioned above, you need to provide `type = aj`, `type = mp` and `type = ns` for adjcency list, materialized path views and nested set. If `type` param is absent, the request will throw an error.
 
 **Example Request:** `www.mydomain.com/subtree/1/?type=ns`
 
-*Note: All routes are relative to base url*
+## Benchmarking Results
+
+## Related Links
+
 
