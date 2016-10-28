@@ -1,5 +1,5 @@
 ## Overview
-This project aims to compare different methods of storing and retrieving hirercharical data using Python (Flask Framework) and PostgreSQL. 
+This project aims to compare different methods of retrieving hirercharical data using Python (Flask Framework) and PostgreSQL. 
 
 ## Tools
 Following tools are used for benchmarking
@@ -20,8 +20,12 @@ Run the following commands to set up the project and environment
 If you wish to insert dummy records in your table, Please go through the next section before running the application.
 
 ## Populating Table Rows
-`task.py` defines a job which can be triggered to insert rows in database table. It uses `PyInvoke` to execute. By default it inserts 10 rows, However you can 
-modify this behaviour by updating *NUM_RECORDS* in `config.py`. If you are inserting significantly large number of rows you should also consider updating *CHUNK_SIZE* variable in `config.py`. This variable defines the number of rows after which SQLAlchemy should issue a commit command to the db. After successful completion of the job you can see records in your `first_model` table.
+There is a module in this application that can be use to insert test data in any specific model. `task.py` defines this job. It uses `PyInvoke` to execute. 
+
+**Example Usage**: `invoke build --type aj`
+For all possible options please see `invoke --help build`.
+
+By default it inserts 10 rows, However you can modify this behaviour by updating *NUM_RECORDS* in `config.py`. If you are inserting significantly large number of rows you should also consider updating *CHUNK_SIZE* variable in `config.py`. This variable defines the number of rows after which SQLAlchemy should issue a commit command to the db. After successful completion of the job you can see records in your specified table.
 
 ## Implemented Methods Overview:
 Following methods are used for benchmarking response and query time.
@@ -34,7 +38,8 @@ Following methods are used for benchmarking response and query time.
 
 ## Routes
 Application provides following end-points:
- - ### Adjcency List End-Points
+
+**Query Params**: To test the requests mentioned below, you need to provide `type = aj`, `type = mp` and `type = ns` for adjcency list, materialized path views and nested set. If `type` param is absent, the request will throw an error.
     
     | function                     |Route                              |Description                                                                                 |
     |---------------------------|----------------------------------|------------------------------------------------------------------------------------------------|
