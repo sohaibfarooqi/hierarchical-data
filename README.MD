@@ -27,6 +27,8 @@ For all possible options please see `invoke --help build`.
 
 By default it inserts 10 rows, However you can modify this behaviour by updating *NUM_RECORDS* in `config.py`. If you are inserting significantly large number of rows you should also consider updating *CHUNK_SIZE* variable in `config.py`. This variable defines the number of rows after which SQLAlchemy should issue a commit command to the db. After successful completion of the job you can see records in your specified table.
 
+**Note**: This job currently support single tree insertions. Future releases of this project will include multi-tree support.
+
 ## Methods Overview:
 Following methods are used for benchmarking response and query time.
  
@@ -51,7 +53,7 @@ Application provides following end-points:
 
 **Example Request:** `www.mydomain.com/subtree/1/?type=ns`
 
-## Benchmarking Results
+## Benchmarking
 
 ## Related Links
 
