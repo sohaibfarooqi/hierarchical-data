@@ -40,9 +40,9 @@ Following methods are used for benchmarking response and query time.
  **Example Data:**
 
 
-+-------------+-------------+
+-----------------------------
 | id          | parent_id   |
-+-------------+-------------+
+-----------------------------
 |           1 |   NULL      |
 |           2 |      1      |
 |           3 |      2      |
@@ -53,7 +53,7 @@ Following methods are used for benchmarking response and query time.
 |           8 |      7      |
 |           9 |      6      |
 |          10 |      6      |
-+-------------+-------------+
+-----------------------------
 
  - ### [Lineage Column (Materialized Path Views)](https://medium.com/notes-from-a-messy-desk/representing-trees-in-postgresql-cbcdae419022#.6666ewmcl)
 
