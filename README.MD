@@ -129,7 +129,7 @@ HTTP request time benchmarking is performed using [wrk](https://github.com/wg/wr
 
 ## Helpful Links
 
- - [Joe Celko wrote the book on SQL Trees & Hiearichies](https://www.amazon.com/dp/1558609202/?tag=stackoverfl08-20)
- - [What are the Options for Storing Hierarchical Data in a Relational Database?](http://stackoverflow.com/questions/4048151/what-are-the-options-for-storing-hierarchical-data-in-a-relational-database)
+- [Joe Celko wrote the book on SQL Trees & Hiearichies](https://www.amazon.com/dp/1558609202/?tag=stackoverfl08-20)
+- [What are the Options for Storing Hierarchical Data in a Relational Database?](http://stackoverflow.com/questions/4048151/what-are-the-options-for-storing-hierarchical-data-in-a-relational-database)
 - [Notes From a Messy desk](https://medium.com/notes-from-a-messy-desk/representing-trees-in-postgresql-cbcdae419022#.6666ewmcl)
 - [Mike Hillyer guides to Hierarchical-Data](http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/)
