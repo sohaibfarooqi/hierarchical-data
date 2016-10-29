@@ -41,18 +41,18 @@ Following methods are used for benchmarking response and query time.
 
 
 
-|  id         | parent_id   |
-|-------------|-------------|
-|           1 |   NULL      |
-|           2 |      1      |
-|           3 |      2      |
-|           4 |      2      |
-|           5 |      2      |
-|           6 |      1      |
-|           7 |      6      |
-|           8 |      7      |
-|           9 |      6      |
-|          10 |      6      |
+				|  id         | parent_id   |
+				|-------------|-------------|
+				|           1 |   NULL      |
+				|           2 |      1      |
+				|           3 |      2      |
+				|           4 |      2      |
+				|           5 |      2      |
+				|           6 |      1      |
+				|           7 |      6      |
+				|           8 |      7      |
+				|           9 |      6      |
+				|          10 |      6      |
 
 
  - ### [Lineage Column (Materialized Path Views)](https://medium.com/notes-from-a-messy-desk/representing-trees-in-postgresql-cbcdae419022#.6666ewmcl)
@@ -63,9 +63,9 @@ Following methods are used for benchmarking response and query time.
 
  **Example data:**   
 
-+-------------+--------------------------------+
+
 | id          | parent_id   |  Path            |
-+-------------+--------------------------------+
+|-------------|-------------|------------------|
 |           1 |   NULL      | None             | 
 |           2 |      1      | None.1.2         |
 |           3 |      2      | None.1.2.3       |
@@ -76,7 +76,7 @@ Following methods are used for benchmarking response and query time.
 |           8 |      7      | None.1.6.7.8     |
 |           9 |      6      | None.1.6.9       |
 |          10 |      6      | None.1.6.10      |
-+-------------+--------------------------------+
+
 
  - ### [Nested Set](https://en.wikipedia.org/wiki/Nested_set_model)
 
@@ -86,9 +86,9 @@ Following methods are used for benchmarking response and query time.
 
  **Example Data:**
 
-+-------------+-----------+
+
 | category    | lft | rgt |
-+-------------+-----------+
+|-------------|-----|-----|
 |           1 |   1 |  20 |
 |           2 |   2 |   9 |
 |           3 |   3 |   4 |
@@ -99,7 +99,7 @@ Following methods are used for benchmarking response and query time.
 |           8 |  12 |  13 |
 |           9 |  15 |  16 |
 |          10 |  17 |  18 |
-+-------------+-----------+
+
 
 ## Routes
 Application provides following end-points:
