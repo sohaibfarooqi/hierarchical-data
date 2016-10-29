@@ -61,6 +61,6 @@ Nested set produced following results:
 ![Nested Set Model Results](https://unsgdg.bl3301.livefilestore.com/y3mNFl8niH8yIeZFFQztmsvsgj9cUErVGo-YUmrAsocR108JUPgxLxc_wEzNs3AaMLJkKgPdTS6jLtAbkvonnYoiLTZ2RBchoLol5FRCluAR-AO6u9WnfIcGaZlLu70ZEkBVcKz7tgntRh0zDwe_04Zi-INhj3RZvytWLXmfVjKvYA?width=1301&height=744&cropmode=none)
 
 
-## Related Links
+## Helpful Links
 
 

@@ -1,14 +1,14 @@
-"""empty message
+"""nested_set_model
 
-Revision ID: e6480f8db3c5
-Revises: 495aecf988c2
-Create Date: 2016-10-24 16:42:47.730106
+Revision ID: 454d1d76049a
+Revises: a21255c4781a
+Create Date: 2016-10-29 19:10:32.416766
 
 """
 
 # revision identifiers, used by Alembic.
-revision = 'e6480f8db3c5'
-down_revision = '495aecf988c2'
+revision = '454d1d76049a'
+down_revision = 'a21255c4781a'
 
 from alembic import op
 import sqlalchemy as sa

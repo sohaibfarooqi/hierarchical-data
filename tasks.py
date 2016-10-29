@@ -1,11 +1,10 @@
 from invoke import task
 from config import ApplicationConfig
-from app.models import FirstModel,SecondModel,NestedSetModel
+from app.models import AdjcencyListModel, MaterializedPathModel, NestedSetModel
 from app.extentions import db
 from datetime import datetime,timedelta
 import random, string
 from app.app import create_app
-import os
 import logging
 from logging.config import fileConfig
 from sqlalchemy_utils import Ltree
@@ -37,12 +36,12 @@ def build(ctx, type=None):
 	logger.info('Chunk Size: %i', CHUNK_SIZE)
 	
 	if type == 'aj':
-		last_id = db.session.query(FirstModel).order_by(FirstModel.id.desc()).first()
+		last_id = db.session.query(AdjcencyListModel).order_by(AdjcencyListModel.id.desc()).first()
 		start,end_range,parent_id,path = getMeta(last_id)
 		insertAdjecencyList(last_id,start,end_range,parent_id)
 	
 	elif type == 'mp':
-		last_id = db.session.query(SecondModel).order_by(SecondModel.id.desc()).first()
+		last_id = db.session.query(MaterializedPathModel).order_by(MaterializedPathModel.id.desc()).first()
 		start,end_range,parent_id,path = getMeta(last_id)
 		insertMateriallizedPath(last_id,start,end_range,parent_id,path)
 
@@ -70,7 +69,7 @@ def insertAdjecencyList(last_id,start_range,end_range,parent_id):
 		if i%3 == 0:
 			parent_id += 1
 
-		model = FirstModel(
+		model = AdjcencyListModel(
 							id = i,
 							created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
 							updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -98,7 +97,7 @@ def insertMateriallizedPath(last_id,start_range,end_range,parent_id,parent_path)
 		object_updated_date = datetime.today() - timedelta(minutes = i)
 		desc = randomword(i+10)
 		title = randomword(5)
-		model = SecondModel(
+		model = MaterializedPathModel(
 								row_id = i,
 								created_at = object_created_date.strftime("%Y-%m-%d %H:%M:%S"), 
 								updated_at = object_updated_date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -116,7 +115,7 @@ def insertMateriallizedPath(last_id,start_range,end_range,parent_id,parent_path)
 		
 		if i % 3 == 0:
 			parent_id += 1
-			parent_object = SecondModel.query.filter(SecondModel.id == parent_id).first()
+			parent_object = MaterializedPathModel.query.filter(MaterializedPathModel.id == parent_id).first()
 			if parent_object is not None:
 				parent_path = str(parent_object.path)
 		
@@ -235,7 +234,7 @@ def getMeta(id):
 		start = id.id + 1
 		end_range = (id.id + 1) + NUM_RECORDS
 		parent_id = id.parent_id
-		parent_object = SecondModel.query.filter(SecondModel.id == parent_id).first()
+		parent_object = MaterializedPathModel.query.filter(MaterializedPathModel.id == parent_id).first()
 		path = str(parent_object.path)
 		return start,end_range,parent_id,path
 

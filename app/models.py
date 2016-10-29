@@ -9,7 +9,7 @@ class TimestampMixin:
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, onupdate=func.now())
 
-class FirstModel(db.Model,Entity,TimestampMixin):
+class AdjcencyListModel(db.Model,Entity,TimestampMixin):
     parent_id = db.Column(db.Integer, index=True)
     title = db.Column(db.String)
     description = db.Column(db.String)
@@ -24,7 +24,7 @@ class FirstModel(db.Model,Entity,TimestampMixin):
         self.description = kwargs['description']
 
 
-class SecondModel(db.Model,Entity,TimestampMixin):
+class MaterializedPathModel(db.Model,Entity,TimestampMixin):
     parent_id = db.Column(db.Integer, index=True)
     title = db.Column(db.String)
     description = db.Column(db.String)

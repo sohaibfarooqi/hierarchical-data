@@ -2,7 +2,7 @@ from .extentions import db
 from sqlalchemy.orm import aliased
 from flask import current_app as app
 from sqlalchemy_utils import Ltree
-from .models import FirstModel, SecondModel, NestedSetModel
+from .models import AdjcencyListModel, MaterializedPathModel, NestedSetModel
 
 class QueryManager:
 
@@ -27,10 +27,10 @@ class QueryManager:
 		Returns an instance of <type>Model class
 		"""
 		if model_type == 'mp':
-			return SecondModel
+			return MaterializedPathModel
 		
 		elif model_type == 'aj':
-			return FirstModel
+			return AdjcencyListModel
 
 		elif model_type == 'ns':
 			return NestedSetModel
