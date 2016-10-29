@@ -64,18 +64,18 @@ Following methods are used for benchmarking response and query time.
  **Example data:**   
 
 
-| id          | parent_id   |  Path            |
-|-------------|-------------|------------------|
-|           1 |   NULL      | None             | 
-|           2 |      1      | None.1.2         |
-|           3 |      2      | None.1.2.3       |
-|           4 |      2      | None.1.2.4       |
-|           5 |      2      | None.1.2.5       |
-|           6 |      1      | None.1.6         |
-|           7 |      6      | None.1.6.7       |
-|           8 |      7      | None.1.6.7.8     |
-|           9 |      6      | None.1.6.9       |
-|          10 |      6      | None.1.6.10      |
+				| id          | parent_id   |  Path            |
+				|-------------|-------------|------------------|
+				|           1 |   NULL      | None             | 
+				|           2 |      1      | None.1.2         |
+				|           3 |      2      | None.1.2.3       |
+				|           4 |      2      | None.1.2.4       |
+				|           5 |      2      | None.1.2.5       |
+				|           6 |      1      | None.1.6         |
+				|           7 |      6      | None.1.6.7       |
+				|           8 |      7      | None.1.6.7.8     |
+				|           9 |      6      | None.1.6.9       |
+				|          10 |      6      | None.1.6.10      |
 
 
  - ### [Nested Set](https://en.wikipedia.org/wiki/Nested_set_model)
@@ -87,18 +87,18 @@ Following methods are used for benchmarking response and query time.
  **Example Data:**
 
 
-| category    | lft | rgt |
-|-------------|-----|-----|
-|           1 |   1 |  20 |
-|           2 |   2 |   9 |
-|           3 |   3 |   4 |
-|           4 |   5 |   6 |
-|           5 |   7 |   8 |
-|           6 |  10 |  19 |
-|           7 |  11 |  14 |
-|           8 |  12 |  13 |
-|           9 |  15 |  16 |
-|          10 |  17 |  18 |
+				| category    | lft | rgt |
+				|-------------|-----|-----|
+				|           1 |   1 |  20 |
+				|           2 |   2 |   9 |
+				|           3 |   3 |   4 |
+				|           4 |   5 |   6 |
+				|           5 |   7 |   8 |
+				|           6 |  10 |  19 |
+				|           7 |  11 |  14 |
+				|           8 |  12 |  13 |
+				|           9 |  15 |  16 |
+				|          10 |  17 |  18 |
 
 
 ## Routes
