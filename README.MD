@@ -85,7 +85,7 @@ Following methods are used for benchmarking response and query time.
  **Example Data:**
 
 
-				| category    | lft | rgt |
+				| id          | lft | rgt |
 				|-------------|-----|-----|
 				|           1 |   1 |  20 |
 				|           2 |   2 |   9 |
