@@ -119,13 +119,13 @@ HTTP request time benchmarking is performed using [wrk](https://github.com/wg/wr
 `getSubTree()` with 100 tree nodes. 
 
 **Nested set:**
-![Nested Set Model Results](https://unsgdg.bl3301.livefilestore.com/y3mNFl8niH8yIeZFFQztmsvsgj9cUErVGo-YUmrAsocR108JUPgxLxc_wEzNs3AaMLJkKgPdTS6jLtAbkvonnYoiLTZ2RBchoLol5FRCluAR-AO6u9WnfIcGaZlLu70ZEkBVcKz7tgntRh0zDwe_04Zi-INhj3RZvytWLXmfVjKvYA?width=1301&height=744&cropmode=none)
+![Nested Set Model Results](NestedSet.png)
 
 **Adjcency List:**
-![Adjcency List Model Results](https://unsqdg.bl3301.livefilestore.com/y3mAD_BrOqi6iWyHEauLt-Kp_DnnmkHoXp2XsgMaslm2-u1DiwwOL5PrBBAbGokae3kXqoSmb_CSf2zwfzAMwEQFPRkYHYJs1BN3_nOtAmna6fPCyt3EmUASw3B7Qwmxgvu4HNoO-WUgNlZCebUKKzd9PB1KcGhoOXhGGEH_gZ-uEU?width=1301&height=744&cropmode=none)
+![Adjcency List Model Results](AdjcencyList.png)
 
 **Materialized Path:**
-![Materialized Path Model Results](https://unspdg.bl3301.livefilestore.com/y3mgV3Az3twJEXHKhTL8ybymtR0NJY-CwbGfh5vnfZgV497-GvhsnE6jlDFnrR5gGv9VBwFrg3vGU8FceGEH45FNPBJmQ2jcE26-bgdyVo0wbUnDoG8Z7ca8zNHorD2e7R4GKzeJdeTsRJmvb7R9QgjANTBJKffPk6qfWrPbzV3HiI?width=1301&height=744&cropmode=none)
+![Materialized Path Model Results](materializedpath.png)
 
 ## Helpful Links
 
