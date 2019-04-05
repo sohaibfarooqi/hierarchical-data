@@ -11,7 +11,7 @@ Following tools are used for benchmarking
 
 ## Installation and Running
 Run the following commands to set up the project and environment
- 
+
  - `git clone https://github.com/SohaibFarooqi/hierarchical-data-model.git`
  - `virtualenv <your-env>`
  - `pip install -r requirements.txt`
@@ -20,7 +20,7 @@ Run the following commands to set up the project and environment
 If you wish to insert dummy records in your table, Please go through the next section before running the application.
 
 ## Populating Table Rows
-There is a module in this application that can be use to insert test data in any specific model. `task.py` defines this job. It uses `PyInvoke` to execute. 
+There is a module in this application that can be use to insert test data in any specific model. `task.py` defines this job. It uses `PyInvoke` to execute.
 
 **Example Usage**: `invoke build --type aj`
 For all possible options please see `invoke --help build`.
@@ -31,7 +31,7 @@ By default it inserts 10 rows, However you can modify this behaviour by updating
 
 ## Methods Overview:
 Following methods are used for benchmarking response and query time.
- 
+
  - ### [Adjcency List](https://en.wikipedia.org/wiki/Adjacency_list)
 
  In the adjacency list model, each item in the table contains a pointer to its parent. The topmost element, in this case electronics, has a NULL value for its parent. The adjacency list model has the advantage of being quite simple
@@ -55,16 +55,16 @@ Following methods are used for benchmarking response and query time.
 
  - ### [Lineage Column (Materialized Path Views)](https://medium.com/notes-from-a-messy-desk/representing-trees-in-postgresql-cbcdae419022#.6666ewmcl)
 
- Lineage Column defines a `path` column which contains path of that node till root node. Path can be seperated with any character. Example `None.1.2.3`. This trick is really handy when searching for child and ansestor nodes. SQL `WITH` and `ANY` are really useful with this approach. 
+ Lineage Column defines a `path` column which contains path of that node till root node. Path can be seperated with any character. Example `None.1.2.3`. This trick is really handy when searching for child and ansestor nodes. SQL `WITH` and `ANY` are really useful with this approach.
  With Postgres one can define [GIN](https://www.postgresql.org/docs/9.5/static/gin.html) or [GIST](https://www.postgresql.org/docs/9.5/static/gist.html) indexes on [LTREE](https://www.postgresql.org/docs/9.5/static/ltree.html) dtype to perform really fast filtering of data.This trick can be used in creating related searches and creating hashtags.
  Drawbacks of this approach are, inserts, update and moving a node is really expensive operation since every time you have to recalculate path and update it.
 
- **Example data:**   
+ **Example data:**
 
 
 				| id          | parent_id   |  Path            |
 				|-------------|-------------|------------------|
-				|           1 |   NULL      | None             | 
+				|           1 |   NULL      | None             |
 				|           2 |      1      | None.1.2         |
 				|           3 |      2      | None.1.2.3       |
 				|           4 |      2      | None.1.2.4       |
@@ -115,17 +115,17 @@ Application provides following end-points:
 **Example Request:** `www.mydomain.com/subtree/1/?type=ns`
 
 ## Benchmarking
-HTTP request time benchmarking is performed using [wrk](https://github.com/wg/wrk). Test is done on 
-`getSubTree()` with 100 tree nodes. 
+HTTP request time benchmarking is performed using [wrk](https://github.com/wg/wrk). Test is done on
+`getSubTree()` with 100 tree nodes.
 
 **Nested set:**
-![Nested Set Model Results](NestedSet.png)
+![Nested Set Model Results](images/NestedSet.png)
 
 **Adjcency List:**
-![Adjcency List Model Results](AdjcencyList.png)
+![Adjcency List Model Results](images/AdjcencyList.png)
 
 **Materialized Path:**
-![Materialized Path Model Results](materializedpath.png)
+![Materialized Path Model Results](images/materializedpath.png)
 
 ## Helpful Links
 
