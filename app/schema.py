@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
 
+
 class EntitySchema(Schema):
     id = fields.Int(dump_only=True)
     parent_id = fields.Int()
